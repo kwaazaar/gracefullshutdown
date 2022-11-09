@@ -1,0 +1,35 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slowshutdownworker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slowshutdownworker
+  template:
+    metadata:
+      labels:
+        app: slowshutdownworker
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 605 # slightly longer than app
+      containers:
+      - name: slowshutdownworker
+        image: kwaazaar/slowshutdownworker:latest
+        args: ["600"]
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        securityContext:
+          privileged: false
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 2000
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+      - emptyDir: {}
+        name: tmp
