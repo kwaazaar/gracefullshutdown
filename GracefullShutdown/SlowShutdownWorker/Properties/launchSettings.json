@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SlowShutdownWorker": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
